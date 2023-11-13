@@ -1,0 +1,21 @@
+{
+  "name": "canikickit-api",
+  "version": "1.0.0",
+  "description": "The API for the CAN I KICK IT invoicing tool",
+  "main": "index.js",
+  "author": "jaspr01",
+  "license": "ISC",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc",
+    "start": "yarn run compile && node ./dist/index.js"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.9.5",
+    "graphql": "^16.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.0",
+    "typescript": "^5.2.2"
+  }
+}
