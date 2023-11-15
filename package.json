@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@apollo/server": "^4.9.5",
-    "graphql": "^16.8.1"
+    "graphql": "^16.8.1",
+    "prisma": "^5.6.0"
   },
   "devDependencies": {
     "@types/node": "^20.9.0",
