@@ -1,0 +1,1 @@
+export { UserResolvers } from './user'

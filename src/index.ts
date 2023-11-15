@@ -1,64 +1,19 @@
+import moduleAlias from 'module-alias'
+import path from 'path'
+
+// Set module aliases
+moduleAlias.addAlias('graphql', path.resolve(__dirname, 'graphql'))
+
 import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone'
+import { schema } from './graphql'
 
-export const typeDefs = `#graphql
-  type User {
-    id: ID!
-    firstName: String!
-    lastName: String!
-    email: String!
-  }
+const server = new ApolloServer({ schema })
 
-  type Query {
-    users: [User]
-    user(id: ID!): User
-  }
+;async () => {
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
+  })
 
-  type Mutation {
-    createUser(firstName: String!, lastName: String!, email: String!): User!
-  }
-`
-
-const users = [
-  {
-    id: '1',
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@gmail.com',
-  },
-]
-
-export const resolvers = {
-  Query: {
-    users: () => users,
-    user(parent, args) {
-      return users.find((user) => user.id === args.id)
-    },
-  },
-
-  Mutation: {
-    createUser(parent, args) {
-      const newUser = {
-        id: String(users.length + 1),
-        firstName: args.firstName,
-        lastName: args.lastName,
-        email: args.email,
-      }
-
-      users.push(newUser)
-
-      return newUser
-    },
-  },
+  console.log(`🚀  Server ready at: ${url}`)
 }
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-})
-
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-})
-
-console.log(`🚀  Server ready at: ${url}`)
