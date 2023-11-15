@@ -24,31 +24,31 @@ const users = [
     id: '1',
     firstName: 'John',
     lastName: 'Doe',
-    email: 'john.doe@gmail.com'
-  }
+    email: 'john.doe@gmail.com',
+  },
 ]
 
 export const resolvers = {
   Query: {
     users: () => users,
-    user(parent, args, contextValue, info) {
-      return users.find((user) => user.id === args.id);
+    user(parent, args) {
+      return users.find((user) => user.id === args.id)
     },
   },
 
   Mutation: {
-    createUser(parent, args, contextValue, info) {
+    createUser(parent, args) {
       const newUser = {
         id: String(users.length + 1),
         firstName: args.firstName,
         lastName: args.lastName,
         email: args.email,
-      };
+      }
 
-      users.push(newUser);
+      users.push(newUser)
 
-      return newUser;
-    }
+      return newUser
+    },
   },
 }
 
@@ -59,6 +59,6 @@ const server = new ApolloServer({
 
 const { url } = await startStandaloneServer(server, {
   listen: { port: 4000 },
-});
+})
 
-console.log(`🚀  Server ready at: ${url}`);
+console.log(`🚀  Server ready at: ${url}`)
