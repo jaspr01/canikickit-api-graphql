@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
-    "rootDirs": ["src"],
-    "outDir": "dist",
-    "lib": ["es2020"],
-    "target": "es2020",
     "module": "CommonJS",
+    "target": "esnext",
+    "outDir": "dist",
+    "rootDir": "src",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "types": ["node"]
+    "types": ["node"],
+    "strict": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "dist/types"
   },
-  "include": [
-    "src"
-  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

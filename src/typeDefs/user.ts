@@ -2,20 +2,23 @@ import gql from 'graphql-tag'
 
 export const UserTypeDefs = gql`
   type User @key(fields: "id") {
-    id: ID!
+    id: String!
     email: String!
     firstName: String!
     lastName: String!
-    createdAt: Date!
-    updatedAt: Date!
+    createdAt: String!
+    updatedAt: String!
   }
 
-  extend type Query {
-    user(id: ID!): User
+  type Query {
     users: [User]
+    user(id: String!): User
+    userByEmail(email: String!): User
   }
 
-  extend type Mutation {
+  type Mutation {
     createUser(email: String!, firstName: String!, lastName: String!): User!
+    updateUser(id: String!, firstName: String, lastName: String): User!
+    deleteUser(id: String!): User!
   }
 `
