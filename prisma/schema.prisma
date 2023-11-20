@@ -15,18 +15,134 @@ model User {
   email               String    @unique
   firstName           String
   lastName            String
+  function            String?
+  password            String
+
+  // Relations
+  companyId           String    @db.Uuid
+  company             Company   @relation(fields: [companyId], references: [id])
+
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model Company {
+  id                  String    @unique @default(uuid()) @db.Uuid
+  name                String
+  enterpriseNumber    String
+  legalForm           LegalForm
+  street              String
+  number              String
+  box                 String?
+  postalCode          String
+  city                String
+  iban                String
+
+  // Relations
+  clients             Client[]
+  invoices            Invoice[]
   timesheetEntries    TimesheetEntry[]
+  users               User[]
+
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model Client {
+  id                  String    @unique @default(uuid()) @db.Uuid
+  name                String
+  enterpriseNumber    String
+  legalForm           LegalForm
+  email               String
+  phone               String
+  street              String
+  number              String
+  box                 String?
+  postalCode          String
+  city                String
+  country             String
+
+  // Relations
+  companyId           String    @db.Uuid
+  company             Company   @relation(fields: [companyId], references: [id])
+  invoices            Invoice[]
+  timesheetEntries    TimesheetEntry[]
+  
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model Invoice {
+  id                  String    @unique @default(uuid()) @db.Uuid
+  number              String
+  title               String
+  date                DateTime
+  dueDate             DateTime
+  paid                Boolean   @default(false)
+
+  // Relations
+  companyId           String    @db.Uuid
+  company             Company   @relation(fields: [companyId], references: [id])
+  clientId            String    @db.Uuid
+  client              Client    @relation(fields: [clientId], references: [id])
+  invoiceLines        InvoiceLine[]
+  timesheetEntries    TimesheetEntry[]
+
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model InvoiceLine {
+  id                  String    @unique @default(uuid()) @db.Uuid
+  description         String
+  unitPrice           Decimal
+  quantity            Decimal
+  subTotal            Decimal
+  vatPercentage       VatPercentage
+  vat                 Decimal
+  total               Decimal
+
+  // Relations
+  invoiceId           String    @db.Uuid
+  invoice             Invoice   @relation(fields: [invoiceId], references: [id])
+
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 }
 
 model TimesheetEntry {
-  id            String    @unique @default(uuid()) @db.Uuid
-  user          User      @relation(fields: [userId], references: [id])
-  userId        String    @db.Uuid
-  date          DateTime
-  duration      Int
-  description   String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                  String    @unique @default(uuid()) @db.Uuid
+  date                DateTime
+  hours               Decimal
+  description         String?
+
+  // Relations
+  companyId           String    @db.Uuid
+  company             Company   @relation(fields: [companyId], references: [id])
+  clientId            String?   @db.Uuid
+  client              Client?   @relation(fields: [clientId], references: [id])
+  invoiceId           String?   @db.Uuid
+  invoice             Invoice?  @relation(fields: [invoiceId], references: [id])
+
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+// ENUMS
+
+enum LegalForm {
+  BV
+  COMM_V
+  CV
+  NV
+  SOLE_PROPRIETORSHIP
+  VOF
+  VZW
+}
+
+enum VatPercentage {
+  SIX
+  TWELVE
+  TWENTY_ONE
+  ZERO
 }
