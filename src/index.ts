@@ -1,18 +1,27 @@
+import 'reflect-metadata'
 import moduleAlias from 'module-alias'
 import path from 'path'
 
-// Set module aliases
 moduleAlias.addAlias('resolvers', path.resolve(__dirname, 'resolvers'))
-moduleAlias.addAlias('typeDefs', path.resolve(__dirname, 'typeDefs'))
+moduleAlias.addAlias('types', path.resolve(__dirname, 'types'))
 
 import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone'
-import { schema } from './schema'
+import { buildSchema } from 'type-graphql'
+import { UserResolvers } from './resolvers'
 
-const server = new ApolloServer({ schema })
+const init = async () => {
+  const schema = await buildSchema({
+    resolvers: [UserResolvers],
+  })
 
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-}).then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`)
-})
+  const server = new ApolloServer({ schema })
+
+  startStandaloneServer(server, {
+    listen: { port: 4000 },
+  }).then(({ url }) => {
+    console.log(`🚀 Server ready at ${url}`)
+  })
+}
+
+init()

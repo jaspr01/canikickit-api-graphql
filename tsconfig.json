@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "target": "esnext",
+    "module": "commonjs",
+    "target": "es2021",
     "outDir": "dist",
-    "rootDir": "src",
+    "baseUrl": "src",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "types": ["node"],
@@ -11,8 +11,11 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "declaration": true,
-    "declarationDir": "dist/types"
+    "declarationDir": "dist/types",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

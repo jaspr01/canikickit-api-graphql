@@ -1,43 +1,41 @@
-import { PrismaClient } from '@prisma/client'
+import { Arg, Query, Resolver } from 'type-graphql'
+import { PrismaClient, User as UserModel } from '@prisma/client'
+import { User } from 'types'
 
 const prisma = new PrismaClient()
 
-export const UserResolvers = {
-  Query: {
-    users() {
-      return prisma.user.findMany()
-    },
+@Resolver(User)
+class UserResolvers {
+  @Query(() => [User])
+  async users(): Promise<UserModel[]> {
+    return prisma.user.findMany()
+  }
 
-    user(parent: unknown, args: { id: string }) {
-      return prisma.user.findUnique({
-        where: { id: args.id },
-      })
-    },
+  @Query(() => User)
+  async user(@Arg('id') id: string): Promise<UserModel | null> {
+    return prisma.user.findUnique({ where: { id } })
+  }
 
-    userByEmail(parent: unknown, args: { email: string }) {
-      return prisma.user.findUnique({
-        where: { email: args.email },
-      })
-    },
-  },
+  @Query(() => User)
+  async userByEmail(@Arg('email') email: string): Promise<UserModel | null> {
+    return prisma.user.findUnique({ where: { email } })
+  }
+
+  /*
 
   Mutation: {
     createUser(
       parent: unknown,
-      args: { email: string; firstName: string; lastName: string }
+      args: Prisma.UserCreateInput
     ) {
       return prisma.user.create({
-        data: {
-          email: args.email,
-          firstName: args.firstName,
-          lastName: args.lastName,
-        },
+        data: args
       })
     },
 
     updateUser(
       parent: unknown,
-      args: { id: string; firstName: string; lastName: string }
+      args: Prisma.UserUpda
     ) {
       return prisma.user.update({
         where: { id: args.id },
@@ -54,4 +52,7 @@ export const UserResolvers = {
       })
     },
   },
+  */
 }
+
+export default UserResolvers

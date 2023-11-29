@@ -1,1 +1,0 @@
-export { UserTypeDefs } from './user'

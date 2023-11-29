@@ -11,121 +11,133 @@ datasource db {
 }
 
 model User {
-  id                  String    @unique @default(uuid()) @db.Uuid
-  email               String    @unique
-  firstName           String
-  lastName            String
-  function            String?
-  password            String
+  id        String  @unique @default(uuid()) @db.Uuid
+  email     String  @unique
+  firstName String
+  lastName  String
+  function  String?
+  password  String?
 
   // Relations
-  companyId           String    @db.Uuid
-  company             Company   @relation(fields: [companyId], references: [id])
+  companyId String?  @db.Uuid
+  company   Company? @relation(fields: [companyId], references: [id])
 
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
 }
 
 model Company {
-  id                  String    @unique @default(uuid()) @db.Uuid
-  name                String
-  enterpriseNumber    String
-  legalForm           LegalForm
-  street              String
-  number              String
-  box                 String?
-  postalCode          String
-  city                String
-  iban                String
+  id               String    @unique @default(uuid()) @db.Uuid
+  name             String
+  enterpriseNumber String
+  legalForm        LegalForm
+  street           String
+  number           Int
+  box              String?
+  postalCode       String
+  city             String
+  iban             String
 
   // Relations
-  clients             Client[]
-  invoices            Invoice[]
-  timesheetEntries    TimesheetEntry[]
-  users               User[]
+  clients          Client[]
+  invoices         Invoice[]
+  timesheetEntries TimesheetEntry[]
+  users            User[]
 
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("companies")
 }
 
 model Client {
-  id                  String    @unique @default(uuid()) @db.Uuid
-  name                String
-  enterpriseNumber    String
-  legalForm           LegalForm
-  email               String
-  phone               String
-  street              String
-  number              String
-  box                 String?
-  postalCode          String
-  city                String
-  country             String
+  id               String    @unique @default(uuid()) @db.Uuid
+  name             String
+  enterpriseNumber String
+  legalForm        LegalForm
+  email            String
+  phone            String
+  street           String
+  number           String
+  box              String?
+  postalCode       String
+  city             String
+  country          String
 
   // Relations
-  companyId           String    @db.Uuid
-  company             Company   @relation(fields: [companyId], references: [id])
-  invoices            Invoice[]
-  timesheetEntries    TimesheetEntry[]
-  
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  companyId        String           @db.Uuid
+  company          Company          @relation(fields: [companyId], references: [id])
+  invoices         Invoice[]
+  timesheetEntries TimesheetEntry[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("clients")
 }
 
 model Invoice {
-  id                  String    @unique @default(uuid()) @db.Uuid
-  number              String
-  title               String
-  date                DateTime
-  dueDate             DateTime
-  paid                Boolean   @default(false)
+  id      String   @unique @default(uuid()) @db.Uuid
+  number  String
+  title   String
+  date    DateTime
+  dueDate DateTime
+  paid    Boolean  @default(false)
 
   // Relations
-  companyId           String    @db.Uuid
-  company             Company   @relation(fields: [companyId], references: [id])
-  clientId            String    @db.Uuid
-  client              Client    @relation(fields: [clientId], references: [id])
-  invoiceLines        InvoiceLine[]
-  timesheetEntries    TimesheetEntry[]
+  companyId        String           @db.Uuid
+  company          Company          @relation(fields: [companyId], references: [id])
+  clientId         String           @db.Uuid
+  client           Client           @relation(fields: [clientId], references: [id])
+  invoiceLines     InvoiceLine[]
+  timesheetEntries TimesheetEntry[]
 
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("invoices")
 }
 
 model InvoiceLine {
-  id                  String    @unique @default(uuid()) @db.Uuid
-  description         String
-  unitPrice           Decimal
-  quantity            Decimal
-  subTotal            Decimal
-  vatPercentage       VatPercentage
-  vat                 Decimal
-  total               Decimal
+  id            String        @unique @default(uuid()) @db.Uuid
+  description   String
+  unitPrice     Decimal
+  quantity      Decimal
+  subTotal      Decimal
+  vatPercentage VatPercentage
+  vat           Decimal
+  total         Decimal
 
   // Relations
-  invoiceId           String    @db.Uuid
-  invoice             Invoice   @relation(fields: [invoiceId], references: [id])
+  invoiceId String  @db.Uuid
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
 
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("invoice_lines")
 }
 
 model TimesheetEntry {
-  id                  String    @unique @default(uuid()) @db.Uuid
-  date                DateTime
-  hours               Decimal
-  description         String?
+  id          String   @unique @default(uuid()) @db.Uuid
+  date        DateTime
+  hours       Decimal
+  description String?
 
   // Relations
-  companyId           String    @db.Uuid
-  company             Company   @relation(fields: [companyId], references: [id])
-  clientId            String?   @db.Uuid
-  client              Client?   @relation(fields: [clientId], references: [id])
-  invoiceId           String?   @db.Uuid
-  invoice             Invoice?  @relation(fields: [invoiceId], references: [id])
+  companyId String   @db.Uuid
+  company   Company  @relation(fields: [companyId], references: [id])
+  clientId  String?  @db.Uuid
+  client    Client?  @relation(fields: [clientId], references: [id])
+  invoiceId String?  @db.Uuid
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id])
 
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("timesheet_entries")
 }
 
 // ENUMS
