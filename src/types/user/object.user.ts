@@ -1,5 +1,5 @@
 import { ObjectType, Field, ID } from 'type-graphql'
-import Company from './company'
+import Company from '../company'
 
 @ObjectType()
 class User {

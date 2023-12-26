@@ -1,5 +1,5 @@
 import { ObjectType, Field, ID, Int, registerEnumType } from 'type-graphql'
-import User from './user'
+import { User } from './user'
 
 // ENUMS
 
